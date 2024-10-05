@@ -1,0 +1,207 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "height": 800,
+  "width": 800,
+  "padding": 5,
+  "data": {
+    "url": "data/GE14_GE15_Voters.csv",
+    "format": {"type": "csv"}
+  },
+  "transform": [
+    {
+      "filter": "datum.GENERAL_ELECTION == 'GE14' || datum.GENERAL_ELECTION == 'GE15'"
+    },
+    {
+      "calculate": "datum.GENERAL_ELECTION == 'GE14' ? 'GE14' : 'GE15'",
+      "as": "Election"
+    },
+    {
+      "aggregate": [
+        {"op": "sum", "field": "NUMBER_OF_ELECTORS", "as": "people"}
+      ],
+      "groupby": ["AGE_RANGE", "Election"]
+    },
+    {
+      "window": [{"op": "sum", "field": "people", "as": "total"}],
+      "frame": [null, null],
+      "groupby": ["Election"]
+    },
+    {
+      "calculate": "parseFloat(datum.people) / parseFloat(datum.total)",
+      "as": "percentage"
+    }
+  ],
+  "spacing": 0,
+  "hconcat": [
+    {
+      "height": 300,
+      "width": 300,
+      "transform": [
+        {"filter": {"field": "Election", "equal": "GE14"}},
+        {"filter": "datum.people >= voterSelection.people"}
+      ],
+      "title": "GE14",
+      "layer": [
+        {
+          "mark": "bar",
+          "encoding": {
+            "y": {
+              "field": "AGE_RANGE",
+              "axis": null,
+              "sort": "descending",
+              "scale": {"domain": ["90+","80-89","70-79","60-69","50-59","40-49","30-39","21-29","18-20"]}
+            },
+            "x": {
+              "aggregate": "sum",
+              "field": "people",
+              "title": "Number of Electors",
+              "axis": {"format": "s"},
+              "scale": {"domain": [2000000, 0]}
+            },
+            "color": {
+              "field": "Election",
+              "scale": {"range": ["#7E60BF", "#295F98"]},
+              "legend": null
+            },
+            "tooltip": [
+              {"field": "AGE_RANGE", "type": "ordinal", "title": "Age Range"},
+              {"field": "people", "type": "quantitative", "title": "Number of Electors"}
+            ]
+          }
+        },
+        {
+          "mark": {
+            "type": "text",
+            "align": "left",
+            "baseline": "middle"
+          },
+          "encoding": {
+            "y": {
+              "field": "AGE_RANGE",
+              "axis": null,
+              "sort": "descending",
+              "scale": {"domain": ["90+","80-89","70-79","60-69","50-59","40-49","30-39","21-29","18-20"]}
+            },
+            "x": {
+              "aggregate": "sum",
+              "field": "people",
+              "scale": {"domain": [2000000, 0]}
+            }
+          }
+        },
+        {
+          "mark": {
+            "type": "rule",
+            "color": "black",
+            "strokeWidth": 1
+          },
+          "encoding": {
+            "x": {"value": 300},
+            "x2": {"value": 220},
+            "y": {"value": 300},
+            "y2": {"value": 280}
+          }
+        },
+        {
+          "mark": {
+            "type": "text",
+            "baseline": "middle",
+            "dx": -50,
+            "dy": 130,
+            "fontSize": 15,
+            "font": "Calibri"
+          },
+          "encoding": {
+            "text": {
+              "value": "Undi-18 is not introduced in GE14 yet"
+            },
+            "color": {"value": "black"}
+          }
+        }
+      ]
+    },
+    {
+      "height": 300,
+      "width": 30,
+      "view": {"stroke": null},
+      "selection": {
+        "voterSelection": {
+          "type": "single",
+          "fields": ["people"],
+          "bind": {"input": "range", "min": 0, "max": 5000000, "step":100000, "name": "Minimum number of electors:"},
+          "init": {"people": 0}
+        }
+      },
+      "mark": {
+        "type": "text",
+        "align": "center"
+      },
+      "encoding": {
+        "y": {"field": "AGE_RANGE", "type": "ordinal", "axis": null, "sort": "descending"},
+        "text": {"field": "AGE_RANGE", "type": "ordinal"}
+      }
+    },
+    {
+      "height": 300,
+      "width": 300,
+      "title": "GE15",
+      "layer": [
+        {
+          "transform": [
+            {"filter": {"field": "Election", "equal": "GE15"}},
+            {"filter": "datum.people >= voterSelection.people"}
+          ],
+          "mark": "bar",
+          "encoding": {
+            "y": {
+              "field": "AGE_RANGE",
+              "title": null,
+              "axis": null,
+              "sort": "descending",
+              "scale": {"domain": ["90+","80-89","70-79","60-69","50-59","40-49","30-39","21-29","18-20"]}
+            },
+            "x": {
+              "aggregate": "sum",
+              "field": "people",
+              "title": "Number of Electors",
+              "axis": {"format": "s"},
+              "scale": {"domain": [0, 5000000]}
+            },
+            "color": {
+              "value": "#295F98"
+            },
+            "tooltip": [
+              {"field": "AGE_RANGE", "type": "ordinal", "title": "Age Range"},
+              {"field": "people", "type": "quantitative", "title": "Number of Electors"}
+            ]
+          }
+        },
+        {
+          "mark": {
+            "type": "text",
+            "align": "left",
+            "baseline": "middle",
+            "dx": 10
+          },
+          "encoding": {
+            "y": {
+              "field": "AGE_RANGE",
+              "axis": null,
+              "sort": "descending",
+              "scale": {"domain": ["90+","80-89","70-79","60-69","50-59","40-49","30-39","21-29","18-20"]}
+            },
+            "x": {
+              "aggregate": "sum",
+              "field": "people",
+              "scale": {"domain": [0, 5000000]}
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "config": {
+    "view": {"stroke": null},
+    "axis": {"grid": false}
+  }
+}

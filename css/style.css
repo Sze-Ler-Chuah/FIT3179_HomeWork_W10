@@ -1,0 +1,52 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#dashboard {
+    height: 1700px;
+    background-color: #F0EBE3;
+}
+
+#dashboard h2 {
+    text-align: center;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    font-size: 30px;
+}
+
+#title {
+    text-align: center;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    font-size: 40px;
+}
+
+#population {
+    display: flex;
+    flex-direction: column; /* Change to row to display side by side */
+    justify-content: center;
+    align-items: center;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    padding-left: 40px;
+
+}
+
+#turnout {
+    display: flex;
+    flex-direction: column; /* Change to row to display side by side */
+    justify-content: center;
+    align-items: center;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    padding-left: 40px;
+}
+
+#annotation {
+    margin-top: 50px;
+    margin-bottom: 50px;
+    text-align: center;
+    font-size: 20px;
+}

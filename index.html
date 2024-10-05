@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/vega@5.22.1"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.2.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.20.8"></script>
+
+  <link rel="stylesheet" href="css/style.css">
+  <title>HomeWork Assessment W10</title>
+</head>
+<body>
+    <div id="dashboard">
+        <div id="title"> <h1>HomeWork Assessment W10</h1> </div>
+        <h2>Age Group Distribution of Electors in Malaysia's 14th and 15th General Elections</h2>
+        <div id="population"></div>
+        <div id ="turnout"></div>
+    </div>
+
+  <script>
+    vegaEmbed('#population', "json/population_pyramid.json").then(function(result) {}).catch(console.error);
+    vegaEmbed('#turnout', "json/turnout.json").then(function(result) {}).catch(console.error);
+
+  </script>
+</body>
+</html>

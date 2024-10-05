@@ -1,0 +1,84 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "title": 
+    {
+      "text": "Turnout Rate Malaysia’s 15th General Election",
+      "font": "Calibri",
+      "fontSize": 28,
+      "fontWeight": "bold",
+      "color": "black"
+    },
+    "width": 1200,
+    "height": 600,
+    "background" : "#F0EBE3",
+    "projection": {"type": "mercator", "scale" : 3400, "center": [109.5, 3.5]},
+    "data": {
+      "url": "./json/mas_parliament.json",
+      "format": {"type": "topojson", "feature": "malaysia.parlimen"}
+    },
+    "layer": [
+      {
+        "data" : {"sphere": true},
+        "mark" : {"type": "geoshape", "fill": "lightblue"}
+      },
+      {
+        "data" : {"graticule": {"step": [5, 5]}},
+        "mark": {"type": "geoshape", "stroke": "black", "strokeWidth": 0.5, "strokeOpacity": 0.5, "fill": "none"} 
+      },
+      {
+        "transform": [
+          {
+            "calculate": "'Data is not available in ' + datum.properties.name",
+            "as": "note"
+          }
+        ],
+        "mark": {"type": "geoshape", "fill": "lightgray", "stroke": "white"},
+        "encoding": {"tooltip": {"field": "note"}}
+      },
+      {
+        "transform": [
+          {
+            "lookup": "properties.code_parlimen",
+            "from": {
+              "data": {
+                "url": "https://raw.githubusercontent.com/Sze-Ler-Chuah/FIT3179_Homework_W9/refs/heads/main/data/GE15_Parliament_Elections.csv"
+              },
+              "key": "PARLIAMENTARY CODE",
+              "fields": ["STATE","TURNOUT","PARLIAMENTARY NAME","PARLIAMENTARY CODE"]
+            }
+          },
+          {
+            "calculate" : "datum.TURNOUT / 100",
+            "as": "Turnout Rate"
+          },
+          {
+            "calculate": "datum['PARLIAMENTARY CODE'] + ' - ' + datum['PARLIAMENTARY NAME']",
+            "as": "Parliamentary Code and Name"
+          }
+        ],
+        "mark": {"type": "geoshape", "stroke": "#3c3d37"},
+        "encoding": {
+          "color": {
+            "field": "TURNOUT",
+            "type": "quantitative",
+            "scale": {
+              "type": "threshold",
+              "domain": [40.00, 50.00, 60.00, 70.00, 80.00, 90.00, 100.00],
+              "range": ["#fff5eb", "#fee6ce", "#fdd0a2", "#fdae6b", "#fd8d3c","#f16913", "#d94801", "#8c2d04"]
+            },
+            "legend": {
+              "title": "Turnout Rate(%)",
+              "orient": "bottom",
+              "gradientLength": 2000
+            }
+          },
+          "tooltip": [
+            {"field": "STATE", "type": "nominal", "title": "State"},
+            {"field": "Parliamentary Code and Name", "type": "nominal", "title": "Parliamentary"},
+            {"field": "Turnout Rate", "type": "quantitative", "title" : "Turnout Rate", "format": ".2%"}
+          ]
+        }
+      }
+    ],
+    "config": {}
+}
